@@ -1,119 +1,99 @@
-<script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { NButton, NInput } from 'naive-ui';
-import MyLink from '@/Components/MyLink.vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
+<script setup lang="ts">
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import InputError from '@/Components/InputError.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
+import TextInput from '@/Components/TextInput.vue'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 
 const form = useForm({
-  username: '',
-  email: '',
-  password: '',
-  password_confirmation: '',
-});
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+})
 
 const submit = () => {
-  form.post(route('register'), {
-    onFinish: () => form.reset('password', 'password_confirmation'),
-  });
-};
+    form.post(route('register'), {
+        onFinish: () => {
+            form.reset('password', 'password_confirmation')
+        },
+    })
+}
 </script>
 
 <template>
-  <AppLayout>
-    <Head :title="$t('head.register')"/>
+    <GuestLayout>
+        <Head :title="$t('head.register')" />
 
-
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $t('auth.register') }}</h2>
-    </template>
-
-    <div class="py-4 md:py-12">
-      <div class="max-w-xl mx-auto sm:px-3 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 md:p-6">
-
-          <form @submit.prevent="submit">
+        <form @submit.prevent="submit">
             <div>
-              <InputLabel for="username" :value="$t('auth.username')"/>
+                <InputLabel for="name" :value="$t('auth.username')" />
 
-              <NInput
-                id="username"
-                :input-props="{ type: 'text' }"
-                :placeholder="$t('auth.username')"
-                class="mt-1 block w-full"
-                v-model:value="form.username"
-                required
-                autofocus
-                autocomplete="username"
-              />
+                <TextInput
+                    id="name"
+                    v-model="form.name"
+                    :placeholder="$t('auth.username')"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                    autofocus
+                    autocomplete="name"
+                />
 
-              <InputError class="mt-2" :message="form.errors.username"/>
+                <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div class="mt-4">
-              <InputLabel for="email" :value="$t('auth.email')"/>
+                <InputLabel for="email" :value="$t('auth.email')" />
 
-              <NInput
-                id="email"
-                :input-props="{ type: 'email' }"
-                :placeholder="$t('auth.email')"
-                class="mt-1 block w-full"
-                v-model:value="form.email"
-                required
-                autocomplete="username"
-              />
+                <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full" required autocomplete="username" />
 
-              <InputError class="mt-2" :message="form.errors.email"/>
+                <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-              <InputLabel for="password" :value="$t('auth.password')"/>
+                <InputLabel for="password" :value="$t('auth.password')" />
 
-              <NInput
-                id="password"
-                :input-props="{ type: 'password' }"
-                :placeholder="$t('auth.password')"
-                class="mt-1 block w-full"
-                v-model:value="form.password"
-                required
-                autocomplete="new-password"
-              />
+                <TextInput
+                    id="password"
+                    v-model="form.password"
+                    type="password"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="new-password"
+                />
 
-              <InputError class="mt-2" :message="form.errors.password"/>
+                <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
-              <InputLabel for="password_confirmation" :value="$t('auth.confirmPassword')"/>
+                <InputLabel for="password_confirmation" :value="$t('auth.confirmPassword')" />
 
-              <NInput
-                id="password_confirmation"
-                :input-props="{ type: 'password' }"
-                :placeholder="$t('auth.confirmPassword')"
-                class="mt-1 block w-full"
-                v-model:value="form.password_confirmation"
-                required
-                autocomplete="new-password"
-              />
+                <TextInput
+                    id="password_confirmation"
+                    v-model="form.password_confirmation"
+                    type="password"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="new-password"
+                />
 
-              <InputError class="mt-2" :message="form.errors.password_confirmation"/>
+                <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
-            <div class="flex items-center justify-end mt-4 gap-4">
-              <MyLink
-                :href="route('login')"
-              >
-                {{ $t('auth.alreadyRegistered') }}
-              </MyLink>
+            <div class="flex items-center justify-end mt-4">
+                <Link
+                    :href="route('login')"
+                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                >
+                    {{ $t('auth.alreadyRegistered') }}
+                </Link>
 
-              <NButton attr-type="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
-                       type="primary" round>
-                {{ $t('auth.register') }}
-              </NButton>
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    {{ $t('auth.register') }}
+                </PrimaryButton>
             </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </AppLayout>
+        </form>
+    </GuestLayout>
 </template>

@@ -1,108 +1,92 @@
-<script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { NButton, NInput, NCheckbox } from 'naive-ui';
-import MyLink from '@/Components/MyLink.vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
+<script setup lang="ts">
+import Checkbox from '@/Components/Checkbox.vue'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import InputError from '@/Components/InputError.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
+import TextInput from '@/Components/TextInput.vue'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 
-defineProps({
-  canResetPassword: {
-    type: Boolean,
-  },
-  status: {
-    type: String,
-  },
-});
+defineProps<{
+    canResetPassword?: boolean
+    status?: string
+}>()
 
 const form = useForm({
-  email: '',
-  password: '',
-  remember: false,
-});
+    email: '',
+    password: '',
+    remember: false,
+})
 
 const submit = () => {
-  form.post(route('login'), {
-    onFinish: () => form.reset('password'),
-  });
-};
+    form.post(route('login'), {
+        onFinish: () => {
+            form.reset('password')
+        },
+    })
+}
 </script>
 
 <template>
-  <AppLayout>
-    <Head :title="$t('head.login')"/>
+    <GuestLayout>
+        <Head :title="$t('head.login')" />
 
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $t('auth.login') }}</h2>
-    </template>
-
-    <div class="py-4 md:py-12">
-      <div class="max-w-xl mx-auto sm:px-3 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 md:p-6">
-
-          <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
-          </div>
+        </div>
 
-          <form @submit.prevent="submit">
+        <form @submit.prevent="submit">
             <div>
-              <InputLabel for="username" :value="$t('auth.username')"/>
+                <InputLabel for="email" :value="$t('auth.email')" />
 
-              <NInput
-                id="username"
-                class="mt-1 block w-full"
-                v-model:value="form.email"
-                required
-                autofocus
-                autocomplete="username"
-                :placeholder="$t('auth.username')"
-              />
+                <TextInput
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    class="mt-1 block w-full"
+                    required
+                    autofocus
+                    autocomplete="username"
+                />
 
-              <InputError class="mt-2" :message="form.errors.email"/>
+                <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-              <InputLabel for="password" :value="$t('auth.password')"/>
+                <InputLabel for="password" :value="$t('auth.password')" />
 
-              <NInput
-                id="password"
-                :input-props="{ type: 'password' }"
-                :placeholder="$t('auth.password')"
-                class="mt-1 block w-full"
-                v-model:value="form.password"
-                required
-                autocomplete="password"
-              />
+                <TextInput
+                    id="password"
+                    v-model="form.password"
+                    type="password"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="current-password"
+                />
 
-              <InputError class="mt-2" :message="form.errors.password"/>
+                <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="block mt-4">
-              <label class="flex items-center">
-                <NCheckbox v-model:checked="form.remember">
-                  {{ $t('auth.rememberMe') }}
-                </NCheckbox>
-              </label>
+                <label class="flex items-center">
+                    <Checkbox v-model:checked="form.remember" name="remember" />
+                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ $t('auth.rememberMe') }}</span>
+                </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4 gap-4">
-              <MyLink
-                v-if="canResetPassword"
-                :href="route('password.request')"
-              >
-                {{ $t('auth.forgotPassword') }}
-              </MyLink>
+            <div class="flex items-center justify-end mt-4">
+                <Link
+                    v-if="canResetPassword"
+                    :href="route('password.request')"
+                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                >
+                    {{ $t('auth.forgotPassword') }}
+                </Link>
 
-              <NButton attr-type="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" type="primary" round>
-                {{ $t('auth.login') }}
-              </NButton>
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    {{ $t('auth.login') }}
+                </PrimaryButton>
             </div>
-          </form>
-
-        </div>
-      </div>
-    </div>
-
-
-  </AppLayout>
+        </form>
+    </GuestLayout>
 </template>

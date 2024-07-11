@@ -1,12 +1,18 @@
 includes:
-    - ./vendor/nunomaduro/larastan/extension.neon
-    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - vendor/larastan/larastan/extension.neon
+
 parameters:
+
     paths:
-        - app
+        - app/
+
+    # Level 9 is the highest level
     level: 8
-    ignoreErrors:
-        -
-            message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$pivot.#'
-    excludePaths:
-    checkGenericClassInNonGenericObjectType: false
+
+#    ignoreErrors:
+#        - '#PHPDoc tag @var#'
+#
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+#
+#    checkMissingIterableValueType: false
